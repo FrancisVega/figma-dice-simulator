@@ -1,36 +1,82 @@
 <html>
-  <head>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
-
-      button {
-        border-radius: 4px;
-        border: 0;
-        padding: 16px;
-        font-size: 20px;
-        background-color: orange;
-        color: white;
-        font-weight: 900;
-      }
-    </style>
-  </head>
+  <head> </head>
   <div class="center">
-    <button>Roll!</button>
+    <button id="dice">click</button>
+    <button id="count">0</button>
+    <button id="min">4</button>
+    <button id="roll">Roll!</button>
   </div>
 
   <script>
-    document.querySelector("button").onclick = () => {
-      parent.postMessage({ pluginMessage: "anything here" }, "*");
+    let idx = 0;
+    let countIdx = 1;
+    let minIdx = 0;
+    const dices = ["d4", "d6", "d12", "d20"];
+    const count = { d4: 5, d6: 6, d12: 10, d20: 20 };
+    const diceResults = {
+      d4: ["-", 6, 7, 8, 9],
+      d6: ["-", 1, 2, 3, 4, 5, 6],
+      d12: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      d20: [
+        "-",
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    };
+
+    const diceButton = document.querySelector("#dice");
+    const countButton = document.querySelector("#count");
+    const minButton = document.querySelector("#min");
+    const rollButton = document.querySelector("#roll");
+
+    diceButton.textContent = dices[idx];
+    countButton.textContent = countIdx;
+    minButton.textContent = minIdx;
+
+    diceButton.addEventListener("click", () => {
+      minIdx = 0;
+      idx = idx === dices.length - 1 ? 0 : idx + 1;
+      diceButton.textContent = dices[idx];
+      minButton.textContent = "-";
+    });
+
+    countButton.addEventListener("click", () => {
+      countIdx = countIdx === 10 ? 1 : countIdx + 1;
+      countButton.textContent = countIdx;
+    });
+
+    minButton.addEventListener("click", () => {
+      const minLength = diceResults[dices[idx]].length;
+      minIdx = minIdx === minLength - 1 ? 0 : minIdx + 1;
+      minValue = diceResults[dices[idx]][minIdx];
+      minButton.textContent = minValue;
+    });
+
+    document.querySelector("#roll").onclick = () => {
+      const roll = {
+        dice: dices[idx],
+        count: countIdx,
+        threshold: minIdx
+      };
+      parent.postMessage({ pluginMessage: roll }, "*");
     };
   </script>
 </html>
