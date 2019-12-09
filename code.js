@@ -83,6 +83,8 @@ figma.ui.onmessage = async (message) => {
   const DICETYPE = message.dice // d4
   const COUNT = message.count // 2
   const THRESHOLD = message.threshold // 7
+  const SORTDICES = message.sortDices // bool
+  console.log(SORTDICES)
 
   switch (DICETYPE) {
     case "d4":
@@ -91,7 +93,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 4,
-        start: 6
+        start: 6,
+        sortDices: SORTDICES
       })
       break
     case "d6":
@@ -100,7 +103,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 6,
-        start: 1
+        start: 1,
+        sortDices: SORTDICES
       })
       break
     case "d8":
@@ -109,7 +113,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 8,
-        start: 1
+        start: 1,
+        sortDices: SORTDICES
       })
       break
     case "d10":
@@ -118,7 +123,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 10,
-        start: 1
+        start: 1,
+        sortDices: SORTDICES
       })
       break
     case "d12":
@@ -127,7 +133,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 12,
-        start: 1
+        start: 1,
+        sortDices: SORTDICES
       })
       break
     case "d20":
@@ -136,7 +143,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 20,
-        start: 1
+        start: 1,
+        sortDices: SORTDICES
       })
       break
   }
@@ -156,11 +164,12 @@ async function createDNTextNode(value, font) {
   text.characters = value
 }
 
-function createTextDiceNode({ diceType, fn, count, font, faces, start }) {
+function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices = false }) {
   fn(
     Array(count)
       .fill(null)
       .map((x) => roll(faces, start))
+      .sort((a, b) => (sortDices ? (a > b ? 1 : -1) : 1))
       .map((n) => SYMBOLS[diceType][n])
       .join(""),
     DICEFONTS[diceType]
