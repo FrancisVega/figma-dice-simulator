@@ -95,7 +95,8 @@ figma.ui.onmessage = async (message) => {
         faces: 4,
         start: 1,
         showSum: SHOWSUM,
-        sortDices: SORTDICES
+        sortDices: SORTDICES,
+        threshold: THRESHOLD
       })
       break
     case "d6":
@@ -106,7 +107,8 @@ figma.ui.onmessage = async (message) => {
         faces: 6,
         start: 1,
         showSum: SHOWSUM,
-        sortDices: SORTDICES
+        sortDices: SORTDICES,
+        threshold: THRESHOLD
       })
       break
     case "d8":
@@ -117,7 +119,8 @@ figma.ui.onmessage = async (message) => {
         faces: 8,
         start: 1,
         showSum: SHOWSUM,
-        sortDices: SORTDICES
+        sortDices: SORTDICES,
+        threshold: THRESHOLD
       })
       break
     case "d10":
@@ -128,7 +131,8 @@ figma.ui.onmessage = async (message) => {
         faces: 10,
         start: 1,
         showSum: SHOWSUM,
-        sortDices: SORTDICES
+        sortDices: SORTDICES,
+        threshold: THRESHOLD
       })
       break
     case "d12":
@@ -139,7 +143,8 @@ figma.ui.onmessage = async (message) => {
         faces: 12,
         start: 1,
         showSum: SHOWSUM,
-        sortDices: SORTDICES
+        sortDices: SORTDICES,
+        threshold: THRESHOLD
       })
       break
     case "d20":
@@ -150,7 +155,8 @@ figma.ui.onmessage = async (message) => {
         faces: 20,
         start: 1,
         showSum: SHOWSUM,
-        sortDices: SORTDICES
+        sortDices: SORTDICES,
+        threshold: THRESHOLD
       })
       break
   }
@@ -160,7 +166,7 @@ figma.ui.onmessage = async (message) => {
 
 const roll = (n, start = 1) => Math.ceil(Math.random() * n) + start - 1
 
-async function createDNTextNode(value, font, sum) {
+async function createDNTextNode(value, font, sum, threshold, rollValues) {
   await figma.loadFontAsync({
     family: font,
     style: "Regular"
@@ -169,7 +175,22 @@ async function createDNTextNode(value, font, sum) {
   text.fontName = { family: font, style: "Regular" }
   text.characters = value
   text.fontSize = 60
-  await createSumTextNode(sum)
+  // paint
+  let failValues = 0
+  rollValues.forEach((x, idx) => {
+    if (x < threshold) {
+      failValues = failValues + x
+      paintChar(text, idx + 1, { r: 0.4, g: 0.4, b: 0.4 })
+    } else {
+      paintChar(text, idx + 1, { r: 0, g: 0, b: 0 })
+    }
+  })
+
+  if (threshold > 0) {
+    await createSumTextNode(sum - failValues)
+  } else {
+    await createSumTextNode(sum)
+  }
 }
 
 async function createSumTextNode(value) {
@@ -179,11 +200,11 @@ async function createSumTextNode(value) {
   })
   const sumText = figma.currentPage.findOne((n) => n.name === "__SUM__")
   sumText.fontName = { family: "Roboto", style: "Regular" }
-  sumText.characters = value.toString()
+  sumText.characters = value <= 0 ? "" : value.toString()
   sumText.fontSize = 20
 }
 
-function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices = false, showSum }) {
+function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices = false, showSum, threshold }) {
   const value = Array(count)
     .fill(null)
     .map((x) => roll(faces, start))
@@ -192,5 +213,9 @@ function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices
   const sum = value.reduce((a, b) => a + b, 0)
   figma.ui.postMessage(showSum ? sum : "")
 
-  fn(value.map((n) => SYMBOLS[diceType][n]).join(""), DICEFONTS[diceType], showSum ? sum : "")
+  fn(value.map((n) => SYMBOLS[diceType][n]).join(""), DICEFONTS[diceType], showSum ? sum : "", threshold, value)
+}
+
+function paintChar(text, pos, col) {
+  text.setRangeFills(pos - 1, pos, [{ type: "SOLID", color: col }])
 }

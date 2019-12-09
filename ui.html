@@ -57,21 +57,34 @@
     countButton.textContent = countIdx;
     minButton.textContent = minIdx;
 
-    diceButton.addEventListener("click", () => {
-      minIdx = 0;
-      idx = idx === dices.length - 1 ? 0 : idx + 1;
-      diceButton.textContent = dices[idx];
-      minButton.textContent = "-";
+    diceButton.addEventListener("click", (event) => {
+        minIdx = 0;
+      if ( event.altKey) {
+        idx = idx === 0 ? dices.length-1 : idx - 1;
+      } else {
+        idx = idx === dices.length - 1 ? 0 : idx + 1;
+      }
+        diceButton.textContent = dices[idx];
+        minButton.textContent = "-";
     });
 
     countButton.addEventListener("click", () => {
-      countIdx = countIdx === 10 ? 1 : countIdx + 1;
+      if ( event.altKey) {
+      countIdx = countIdx === 0 ? 50 : countIdx - 1;
       countButton.textContent = countIdx;
+      }else {
+      countIdx = countIdx === 50 ? 1 : countIdx + 1;
+      countButton.textContent = countIdx;
+      }
     });
 
     minButton.addEventListener("click", () => {
       const minLength = diceResults[dices[idx]].length;
+      if ( event.altKey) {
+      minIdx = minIdx === 0 ? minLength - 1 : minIdx - 1;
+      }else {
       minIdx = minIdx === minLength - 1 ? 0 : minIdx + 1;
+      }
       minValue = diceResults[dices[idx]][minIdx];
       minButton.textContent = minValue;
     });
@@ -88,7 +101,7 @@
     };
 
 onmessage = (event) => {
-  document.querySelector("#output").innerHTML = event.data.pluginMessage
+  <!--document.querySelector("#output").innerHTML = event.data.pluginMessage-->
 }
 
   </script>
