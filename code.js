@@ -10,7 +10,7 @@ const DICEFONTS = {
 }
 
 const SYMBOLS = {
-  d4: { "6": "B", "7": "E", "8": "I", "9": "J" },
+  d4: { "1": "B", "2": "E", "3": "I", "4": "J" },
   d6: {
     "1": "!",
     "2": "@",
@@ -83,8 +83,8 @@ figma.ui.onmessage = async (message) => {
   const DICETYPE = message.dice // d4
   const COUNT = message.count // 2
   const THRESHOLD = message.threshold // 7
+  const SHOWSUM = message.showSum // bool
   const SORTDICES = message.sortDices // bool
-  console.log(SORTDICES)
 
   switch (DICETYPE) {
     case "d4":
@@ -93,7 +93,8 @@ figma.ui.onmessage = async (message) => {
         diceType: DICETYPE,
         count: COUNT,
         faces: 4,
-        start: 6,
+        start: 1,
+        showSum: SHOWSUM,
         sortDices: SORTDICES
       })
       break
@@ -104,6 +105,7 @@ figma.ui.onmessage = async (message) => {
         count: COUNT,
         faces: 6,
         start: 1,
+        showSum: SHOWSUM,
         sortDices: SORTDICES
       })
       break
@@ -114,6 +116,7 @@ figma.ui.onmessage = async (message) => {
         count: COUNT,
         faces: 8,
         start: 1,
+        showSum: SHOWSUM,
         sortDices: SORTDICES
       })
       break
@@ -124,6 +127,7 @@ figma.ui.onmessage = async (message) => {
         count: COUNT,
         faces: 10,
         start: 1,
+        showSum: SHOWSUM,
         sortDices: SORTDICES
       })
       break
@@ -134,6 +138,7 @@ figma.ui.onmessage = async (message) => {
         count: COUNT,
         faces: 12,
         start: 1,
+        showSum: SHOWSUM,
         sortDices: SORTDICES
       })
       break
@@ -144,6 +149,7 @@ figma.ui.onmessage = async (message) => {
         count: COUNT,
         faces: 20,
         start: 1,
+        showSum: SHOWSUM,
         sortDices: SORTDICES
       })
       break
@@ -153,25 +159,38 @@ figma.ui.onmessage = async (message) => {
 // -- functions --
 
 const roll = (n, start = 1) => Math.ceil(Math.random() * n) + start - 1
-async function createDNTextNode(value, font) {
+
+async function createDNTextNode(value, font, sum) {
   await figma.loadFontAsync({
     family: font,
     style: "Regular"
   })
-  const text = figma.createText()
+  const text = figma.currentPage.findOne((n) => n.name === "__MAT__")
   text.fontName = { family: font, style: "Regular" }
-  text.fontSize = 60
   text.characters = value
+  text.fontSize = 60
+  await createSumTextNode(sum)
 }
 
-function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices = false }) {
-  fn(
-    Array(count)
-      .fill(null)
-      .map((x) => roll(faces, start))
-      .sort((a, b) => (sortDices ? (a > b ? 1 : -1) : 1))
-      .map((n) => SYMBOLS[diceType][n])
-      .join(""),
-    DICEFONTS[diceType]
-  )
+async function createSumTextNode(value) {
+  await figma.loadFontAsync({
+    family: "Roboto",
+    style: "Regular"
+  })
+  const sumText = figma.currentPage.findOne((n) => n.name === "__SUM__")
+  sumText.fontName = { family: "Roboto", style: "Regular" }
+  sumText.characters = value.toString()
+  sumText.fontSize = 20
+}
+
+function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices = false, showSum }) {
+  const value = Array(count)
+    .fill(null)
+    .map((x) => roll(faces, start))
+    .sort((a, b) => (sortDices ? (a > b ? 1 : -1) : 1))
+
+  const sum = value.reduce((a, b) => a + b, 0)
+  figma.ui.postMessage(showSum ? sum : "")
+
+  fn(value.map((n) => SYMBOLS[diceType][n]).join(""), DICEFONTS[diceType], showSum ? sum : "")
 }

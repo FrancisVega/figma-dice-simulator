@@ -6,7 +6,10 @@
     <button id="min">4</button>
     <button id="roll">Roll!</button>
     <hr/>
-    <input id="sort"type="checkbox">Sort dices</input>
+    <input id="sort" type="checkbox">Sort dices</input>
+    <input id="sum" type="checkbox">Sum</input>
+    <hr/>
+    <p id="output"></p>
   </div>
 
   <script>
@@ -15,7 +18,7 @@
     let minIdx = 0;
     const dices = ["d4", "d6", "d8", "d10", "d12", "d20"];
     const diceResults = {
-      d4: ["-", 6, 7, 8, 9],
+      d4: ["-", 1, 2, 3, 4],
       d6: ["-", 1, 2, 3, 4, 5, 6],
       d8: ["-", 1, 2, 3, 4, 5, 6, 7, 8],
       d10: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -78,9 +81,15 @@
         dice: dices[idx],
         count: countIdx,
         threshold: minIdx,
-        sortDices: document.querySelector("#sort").checked
+        sortDices: document.querySelector("#sort").checked,
+        showSum: document.querySelector("#sum").checked
       };
       parent.postMessage({ pluginMessage: roll }, "*");
     };
+
+onmessage = (event) => {
+  document.querySelector("#output").innerHTML = event.data.pluginMessage
+}
+
   </script>
 </html>
