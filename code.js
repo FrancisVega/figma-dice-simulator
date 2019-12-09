@@ -174,7 +174,6 @@ async function createDNTextNode(value, font, sum, threshold, rollValues) {
   const text = figma.currentPage.findOne((n) => n.name === "__MAT__")
   text.fontName = { family: font, style: "Regular" }
   text.characters = value
-  text.fontSize = 60
   // paint
   let failValues = 0
   rollValues.forEach((x, idx) => {
@@ -201,7 +200,6 @@ async function createSumTextNode(value) {
   const sumText = figma.currentPage.findOne((n) => n.name === "__SUM__")
   sumText.fontName = { family: "Roboto", style: "Regular" }
   sumText.characters = value <= 0 ? "" : value.toString()
-  sumText.fontSize = 20
 }
 
 function createTextDiceNode({ diceType, fn, count, font, faces, start, sortDices = false, showSum, threshold }) {
