@@ -1,101 +1,168 @@
-figma.showUI(__html__);
+figma.showUI(__html__)
 
-const D4DINGBATS = {
-  "6": "B",
-  "7": "E",
-  "8": "I",
-  "9": "J"
-};
-const D6DINGBATS = {
-  "1": "!",
-  "2": "@",
-  "3": "#",
-  "4": "$",
-  "5": "%",
-  "6": "^"
-};
+const DICEFONTS = {
+  d4: "DPoly Four-Sider",
+  d6: "DPoly Six-Sider",
+  d8: "DPoly Eight-Sider",
+  d10: "DPoly Ten-Sider",
+  d12: "DPoly Twelve-Sider",
+  d20: "DPoly Twenty-Sider"
+}
 
-figma.ui.onmessage = async message => {
-  // Dice dingbata
-
+const SYMBOLS = {
+  d4: { "6": "B", "7": "E", "8": "I", "9": "J" },
+  d6: {
+    "1": "!",
+    "2": "@",
+    "3": "#",
+    "4": "$",
+    "5": "%",
+    "6": "^"
+  },
+  d8: {
+    "1": "A",
+    "2": "B",
+    "3": "C",
+    "4": "D",
+    "5": "E",
+    "6": "F",
+    "7": "G",
+    "8": "H"
+  },
+  d10: {
+    "1": "B",
+    "2": "C",
+    "3": "D",
+    "4": "E",
+    "5": "F",
+    "6": "G",
+    "7": "H",
+    "8": "I",
+    "9": "J",
+    "10": "A"
+  },
+  d12: {
+    "1": "A",
+    "2": "B",
+    "3": "C",
+    "4": "D",
+    "5": "E",
+    "6": "F",
+    "7": "G",
+    "8": "H",
+    "9": "I",
+    "10": "J",
+    "11": "K",
+    "12": "L"
+  },
+  d20: {
+    "1": "A",
+    "2": "B",
+    "3": "C",
+    "4": "D",
+    "5": "E",
+    "6": "F",
+    "7": "G",
+    "8": "H",
+    "9": "I",
+    "10": "J",
+    "11": "K",
+    "12": "L",
+    "13": "A",
+    "14": "B",
+    "15": "C",
+    "16": "D",
+    "17": "E",
+    "18": "F",
+    "19": "G",
+    "20": "H"
+  }
+}
+figma.ui.onmessage = async (message) => {
   // Roll!
-  const DICETYPE = message.dice; // d4
-  const COUNT = message.count; // 2
-  const THRESHOLD = message.threshold; // 7
+  const DICETYPE = message.dice // d4
+  const COUNT = message.count // 2
+  const THRESHOLD = message.threshold // 7
 
   switch (DICETYPE) {
     case "d4":
-      createTextDiceNode(createD4TextNode, d4, D4DINGBATS, COUNT);
-      break;
-
+      createTextDiceNode({
+        fn: createDNTextNode,
+        diceType: DICETYPE,
+        count: COUNT,
+        faces: 4,
+        start: 6
+      })
+      break
     case "d6":
-      createTextDiceNode(createD6TextNode, d6, D6DINGBATS, COUNT);
-      break;
+      createTextDiceNode({
+        fn: createDNTextNode,
+        diceType: DICETYPE,
+        count: COUNT,
+        faces: 6,
+        start: 1
+      })
+      break
+    case "d8":
+      createTextDiceNode({
+        fn: createDNTextNode,
+        diceType: DICETYPE,
+        count: COUNT,
+        faces: 8,
+        start: 1
+      })
+      break
+    case "d10":
+      createTextDiceNode({
+        fn: createDNTextNode,
+        diceType: DICETYPE,
+        count: COUNT,
+        faces: 10,
+        start: 1
+      })
+      break
+    case "d12":
+      createTextDiceNode({
+        fn: createDNTextNode,
+        diceType: DICETYPE,
+        count: COUNT,
+        faces: 12,
+        start: 1
+      })
+      break
+    case "d20":
+      createTextDiceNode({
+        fn: createDNTextNode,
+        diceType: DICETYPE,
+        count: COUNT,
+        faces: 20,
+        start: 1
+      })
+      break
   }
-};
-
-// figma.closePlugin();
+}
 
 // -- functions --
 
-function d4() {
-  const roll = randomNumber(4); // 0 - 3
-  const faces = [
-    [1, 2, 3],
-    [1, 2, 4],
-    [1, 3, 4],
-    [2, 3, 4]
-  ];
-  return faces[roll].reduce((acc, curr) => acc + curr);
-}
-
-function d6() {
-  const roll = randomNumber(6); // 0 - 5
-  const faces = [1, 2, 3, 4, 5, 6];
-  return faces[roll];
-}
-
-async function createD4TextNode(value) {
+const roll = (n, start = 1) => Math.ceil(Math.random() * n) + start - 1
+async function createDNTextNode(value, font) {
   await figma.loadFontAsync({
-    family: "DPoly Four-Sider",
+    family: font,
     style: "Regular"
-  });
-
-  const text = figma.createText();
-
-  // const frame = figma.createFrame();
-  // frame.appendChild(text);
-  text.fontName = { family: "DPoly Four-Sider", style: "Regular" };
-  text.fontSize = 60;
-  text.characters = value;
-  // text.x = x;
-}
-async function createD6TextNode(value) {
-  await figma.loadFontAsync({
-    family: "DPoly Six-Sider",
-    style: "Regular"
-  });
-
-  const text = figma.createText();
-
-  // const frame = figma.createFrame();
-  // frame.appendChild(text);
-  text.fontName = { family: "DPoly Six-Sider", style: "Regular" };
-  text.fontSize = 60;
-  text.characters = value;
-  // text.x = x;
-}
-function randomNumber(n) {
-  return Math.floor(Math.random() * n);
+  })
+  const text = figma.createText()
+  text.fontName = { family: font, style: "Regular" }
+  text.fontSize = 60
+  text.characters = value
 }
 
-function createTextDiceNode(diceTextNodeFn, diceRoll, diceValues, count) {
-  diceTextNodeFn(
+function createTextDiceNode({ diceType, fn, count, font, faces, start }) {
+  fn(
     Array(count)
       .fill(null)
-      .map(x => diceRoll())
-      .map(n => diceValues[n])
+      .map((x) => roll(faces, start))
+      .map((n) => SYMBOLS[diceType][n])
       .join(""),
-    0
-  );
+    DICEFONTS[diceType]
+  )
 }
