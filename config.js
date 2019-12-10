@@ -1,5 +1,3 @@
-// imports...
-
 const DICEFONTS = {
   d4: "DPoly Four-Sider",
   d6: "DPoly Six-Sider",
@@ -79,20 +77,6 @@ const SYMBOLS = {
   },
 }
 
-// Main
-figma.showUI(__html__)
-
-figma.ui.onmessage = async message => {
-  createTextDiceNode({
-    diceType: message.dice,
-    count: message.count,
-    faces: faces(message.dice),
-    showSum: message.showSum,
-    sortDices: message.sortDices,
-    threshold: message.threshold,
-  })
-}
-
 // -- functions --
 
 const roll = n => Math.ceil(Math.random() * n)
@@ -169,3 +153,5 @@ function paintChar(text, pos, col) {
 }
 
 const faces = str => parseInt(str.split(/d/)[1])
+
+export { createTextDiceNode, faces }
