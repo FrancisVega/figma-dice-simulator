@@ -1,4 +1,4 @@
-// imports...
+// -- Constants --
 
 const DICEFONTS = {
   d4: "DPoly Four-Sider",
@@ -79,7 +79,8 @@ const SYMBOLS = {
   },
 }
 
-// Main
+// -- Main --
+
 figma.showUI(__html__)
 
 figma.ui.onmessage = async message => {
@@ -95,7 +96,9 @@ figma.ui.onmessage = async message => {
 
 // -- functions --
 
-const roll = n => Math.ceil(Math.random() * n)
+function roll(n) {
+  return Math.ceil(Math.random() * n)
+}
 
 async function createDNTextNode(value, font, sum, threshold, rollValues) {
   await figma.loadFontAsync({
@@ -110,6 +113,7 @@ async function createDNTextNode(value, font, sum, threshold, rollValues) {
   let failValues = 0
   rollValues.forEach((x, idx) => {
     if (x < threshold) {
+      console.log(x)
       failValues = failValues + x
       paintChar(text, idx + 1, { r: 0.4, g: 0.4, b: 0.4 })
     } else {
