@@ -1,5 +1,18 @@
 <html>
-  <head></head>
+  <head>
+<style>
+body {
+}
+
+      button{
+        padding: 6px 8px;
+        border-radius: 4px;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+</style>
+
+  </head>
   <div class="center">
 
     <!-- D1 -->
@@ -28,8 +41,16 @@
 
     <hr/>
 
+    <div>
+      <button id="coverButton">Cover</button>
+      <button id="shuffleButton">Shuffle</button>
+    </div>
+
+    <hr/>
+
     <input id="sort" type="checkbox">Sort dices</input>
     <input id="sum" type="checkbox">Sum</input>
+
     <hr/>
 
     <p id="output"></p>
@@ -70,6 +91,9 @@
     const countButton3 = document.querySelector("#count3");
     const minButton3 = document.querySelector("#min3");
     const rollButton3 = document.querySelector("#roll3");
+
+    const shuffleButton = document.querySelector("#shuffleButton")
+    const coveButton = document.querySelector("#coverButton")
 
     diceButton.textContent = dices[idx];
     countButton.textContent = countIdx;
@@ -182,6 +206,7 @@
 
     document.querySelector("#roll").onclick = () => {
       const roll = {
+        type:"roll",
         dice: dices[idx],
         count: countIdx,
         threshold: minIdx,
@@ -193,6 +218,7 @@
 
     document.querySelector("#roll2").onclick = () => {
       const roll = {
+        type:"roll",
         dice: dices[idx2],
         count: countIdx2,
         threshold: minIdx2,
@@ -204,6 +230,7 @@
 
     document.querySelector("#roll3").onclick = () => {
       const roll = {
+        type:"roll",
         dice: dices[idx3],
         count: countIdx3,
         threshold: minIdx3,
@@ -213,9 +240,23 @@
       parent.postMessage({ pluginMessage: roll }, "*");
     };
 
+    document.querySelector("#shuffleButton").onclick = () => {
+      const roll = {
+        type: "shuffle",
+      }
+      parent.postMessage({ pluginMessage: roll }, "*");
+    };
+
+    document.querySelector("#coverButton").onclick = () => {
+      const roll = {
+        type: "setCover",
+      }
+      parent.postMessage({ pluginMessage: roll }, "*");
+    };
+
   onmessage = (event) => {
     <!--document.querySelector("#output").innerHTML = event.data.pluginMessage-->
-}
+  }
 
   </script>
 </html>

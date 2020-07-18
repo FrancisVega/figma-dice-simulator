@@ -1,5 +1,7 @@
 // -- Constants --
 
+const coverName = "cover"
+
 const DICEFONTS = {
   d4: "DPoly Four-Sider",
   d6: "DPoly Six-Sider",
@@ -83,18 +85,40 @@ const SYMBOLS = {
 
 figma.showUI(__html__)
 
+figma.ui.resize(200, 260)
 figma.ui.onmessage = async message => {
-  createTextDiceNode({
-    diceType: message.dice,
-    count: message.count,
-    faces: faces(message.dice),
-    showSum: message.showSum,
-    sortDices: message.sortDices,
-    threshold: message.threshold,
-  })
+  const { type } = message
+
+  try {
+    if (type === "shuffle") {
+      shuffleCard()
+    }
+
+    if (type === "setCover") {
+      setCover()
+    }
+
+    if (type === "roll") {
+      createTextDiceNode({
+        diceType: message.dice,
+        count: message.count,
+        faces: faces(message.dice),
+        showSum: message.showSum,
+        sortDices: message.sortDices,
+        threshold: message.threshold,
+      })
+    }
+  } catch (err) {
+    console.error(err)
+    figma.closePlugin(`Error occurred: ${err}`)
+  }
 }
 
 // -- functions --
+
+function shuffle() {
+  console.log("ok")
+}
 
 function roll(n) {
   return Math.ceil(Math.random() * n)
@@ -146,24 +170,27 @@ function createTextDiceNode({
   showSum = false,
   threshold = 0,
 }) {
-  // [8, 4, 2, 9, 1, rnd...]
-  // sort ?
-  const value = Array(count)
-    .fill(null)
-    .map(x => roll(faces))
-    .sort((a, b) => (sortDices ? (a > b ? 1 : -1) : 1))
+  console.log("Create text dice nodes")
+  try {
+    // [8, 4, 2, 9, 1, rnd...]
+    // sort ?
+    const value = Array(count)
+      .fill(null)
+      .map(x => roll(faces))
+      .sort((a, b) => (sortDices ? (a > b ? 1 : -1) : 1))
 
-  // Suma de toda la tirada
-  const sum = value.reduce((a, b) => a + b, 0)
+    // Suma de toda la tirada
+    const sum = value.reduce((a, b) => a + b, 0)
 
-  // Crea una capa de texto
-  createDNTextNode(
-    value.map(n => SYMBOLS[diceType][n]).join(""),
-    DICEFONTS[diceType],
-    showSum ? sum : "",
-    threshold,
-    value
-  )
+    // Crea una capa de texto
+    createDNTextNode(
+      value.map(n => SYMBOLS[diceType][n]).join(""),
+      DICEFONTS[diceType],
+      showSum ? sum : "",
+      threshold,
+      value
+    )
+  } catch (err) {}
 }
 
 // Añade un fill color a un caracter de un nodo de texto en una posición
@@ -172,4 +199,72 @@ function paintChar(text, pos, col) {
   text.setRangeFills(pos - 1, pos, [{ type: "SOLID", color: col }])
 }
 
-const faces = str => parseInt(str.split(/d/)[1])
+const faces = str => {
+  try {
+    return parseInt(str.split(/d/)[1])
+  } catch (err) {}
+}
+
+function getNodeRootName(node, sep = "/") {
+  const name = node.name.split(sep)
+  name.pop()
+  return name.join("/")
+}
+
+function getMasterComponentsByRootName(node, coverName) {
+  const newName = getNodeRootName(node)
+  const re = new RegExp(`${newName}\/(?!${coverName})`)
+  const components = figma.root.findAll(
+    n => n.name.match(re) && n.type === "COMPONENT"
+  )
+  return components
+}
+
+function takeOneComponentRandom(components) {
+  const rndIndex = Math.floor(Math.random() * components.length)
+  return components[rndIndex]
+}
+
+function getOneSelection() {
+  try {
+    return figma.currentPage.selection[0]
+  } catch (e) {
+    return undefined
+  }
+}
+
+function shuffleCard() {
+  console.log("Shuffle")
+  const sel = getOneSelection()
+
+  if (!sel) {
+    figma.notify("Select one card")
+    return
+  }
+
+  const randomMaster = takeOneComponentRandom(
+    getMasterComponentsByRootName(sel, coverName)
+  )
+
+  sel.masterComponent = randomMaster
+}
+
+function getCoverInstance(node, coverName) {
+  const newName = getNodeRootName(node) + "/" + coverName
+  const coverComponent = figma.root.findOne(
+    n => n.name === newName && n.type === "COMPONENT"
+  )
+  return coverComponent
+}
+
+function setCover() {
+  console.log("Set cover")
+  const sel = getOneSelection()
+
+  if (!sel) {
+    figma.notify("Select one card")
+    return
+  }
+
+  sel.masterComponent = getCoverInstance(sel, coverName)
+}
