@@ -1,262 +1,263 @@
 <html>
-  <head>
-<style>
-body {
-}
 
-      button{
-        padding: 6px 8px;
-        border-radius: 4px;
-        font-size: 16px;
-        margin-bottom: 8px;
-      }
-</style>
+<head>
+  <style>
+    body {}
 
-  </head>
-  <div class="center">
+    button {
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+  </style>
 
-    <!-- D1 -->
-    <div>
-      <button id="dice">click</button>
-      <button id="count">0</button>
-      <button id="min">4</button>
-      <button id="roll">Roll!!</button>
-    </div>
+</head>
+<div class="center">
 
-    <!-- D2 -->
-    <div>
-      <button id="dice2">click</button>
-      <button id="count2">0</button>
-      <button id="min2">4</button>
-      <button id="roll2">Roll!!</button>
-    </div>
-
-    <!-- D3 -->
-    <div>
-      <button id="dice3">click</button>
-      <button id="count3">0</button>
-      <button id="min3">4</button>
-      <button id="roll3">Roll!!</button>
-    </div>
-
-    <hr/>
-
-    <div>
-      <button id="coverButton">Cover</button>
-      <button id="shuffleButton">Shuffle</button>
-    </div>
-
-    <hr/>
-
-    <input id="sort" type="checkbox">Sort dices</input>
-    <input id="sum" type="checkbox">Sum</input>
-
-    <hr/>
-
-    <p id="output"></p>
-
+  <!-- D1 -->
+  <div>
+    <button id="dice">click</button>
+    <button id="count">0</button>
+    <button id="min">4</button>
+    <button id="roll">Roll!!</button>
   </div>
 
-  <script>
-    let idx = 0;
-    let idx2 = 0;
-    let idx3 = 0;
-    let countIdx = 1;
-    let countIdx2 = 1;
-    let countIdx3 = 1;
-    let minIdx = 0;
-    let minIdx2 = 0;
-    let minIdx3 = 0;
-    const dices = ["d4", "d6", "d8", "d10", "d12", "d20"];
-    const diceResults = {
-      d4: ["-", 1, 2, 3, 4],
-      d6: ["-", 1, 2, 3, 4, 5, 6],
-      d8: ["-", 1, 2, 3, 4, 5, 6, 7, 8],
-      d10: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      d12: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      d20: [ "-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
-    };
+  <!-- D2 -->
+  <div>
+    <button id="dice2">click</button>
+    <button id="count2">0</button>
+    <button id="min2">4</button>
+    <button id="roll2">Roll!!</button>
+  </div>
 
-    const diceButton = document.querySelector("#dice");
-    const countButton = document.querySelector("#count");
-    const minButton = document.querySelector("#min");
-    const rollButton = document.querySelector("#roll");
+  <!-- D3 -->
+  <div>
+    <button id="dice3">click</button>
+    <button id="count3">0</button>
+    <button id="min3">4</button>
+    <button id="roll3">Roll!!</button>
+  </div>
 
-    const diceButton2 = document.querySelector("#dice2");
-    const countButton2 = document.querySelector("#count2");
-    const minButton2 = document.querySelector("#min2");
-    const rollButton2 = document.querySelector("#roll2");
+  <hr />
 
-    const diceButton3 = document.querySelector("#dice3");
-    const countButton3 = document.querySelector("#count3");
-    const minButton3 = document.querySelector("#min3");
-    const rollButton3 = document.querySelector("#roll3");
+  <div>
+    <button id="coverButton">Cover</button>
+    <button id="shuffleButton">Shuffle</button>
+  </div>
 
-    const shuffleButton = document.querySelector("#shuffleButton")
-    const coveButton = document.querySelector("#coverButton")
+  <hr />
 
+  <input id="sort" type="checkbox">Sort dices</input>
+  <input id="sum" type="checkbox">Sum</input>
+
+  <hr />
+
+  <p id="output"></p>
+
+</div>
+
+<script>
+  let idx = 0;
+  let idx2 = 0;
+  let idx3 = 0;
+  let countIdx = 1;
+  let countIdx2 = 1;
+  let countIdx3 = 1;
+  let minIdx = 0;
+  let minIdx2 = 0;
+  let minIdx3 = 0;
+  const dices = ["d4", "d6", "d8", "d10", "d12", "d20"];
+  const diceResults = {
+    d4: ["-", 1, 2, 3, 4],
+    d6: ["-", 1, 2, 3, 4, 5, 6],
+    d8: ["-", 1, 2, 3, 4, 5, 6, 7, 8],
+    d10: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    d12: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    d20: ["-", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  };
+
+  const diceButton = document.querySelector("#dice");
+  const countButton = document.querySelector("#count");
+  const minButton = document.querySelector("#min");
+  const rollButton = document.querySelector("#roll");
+
+  const diceButton2 = document.querySelector("#dice2");
+  const countButton2 = document.querySelector("#count2");
+  const minButton2 = document.querySelector("#min2");
+  const rollButton2 = document.querySelector("#roll2");
+
+  const diceButton3 = document.querySelector("#dice3");
+  const countButton3 = document.querySelector("#count3");
+  const minButton3 = document.querySelector("#min3");
+  const rollButton3 = document.querySelector("#roll3");
+
+  const shuffleButton = document.querySelector("#shuffleButton")
+  const coveButton = document.querySelector("#coverButton")
+
+  diceButton.textContent = dices[idx];
+  countButton.textContent = countIdx;
+  minButton.textContent = minIdx;
+
+  diceButton2.textContent = dices[idx2];
+  countButton2.textContent = countIdx2;
+  minButton2.textContent = minIdx2;
+
+  diceButton3.textContent = dices[idx3];
+  countButton3.textContent = countIdx3;
+  minButton3.textContent = minIdx3;
+
+  diceButton.addEventListener("click", (event) => {
+    minIdx = 0;
+    if (event.altKey) {
+      idx = idx === 0 ? dices.length - 1 : idx - 1;
+    } else {
+      idx = idx === dices.length - 1 ? 0 : idx + 1;
+    }
     diceButton.textContent = dices[idx];
-    countButton.textContent = countIdx;
-    minButton.textContent = minIdx;
+    minButton.textContent = "-";
+  });
 
+  diceButton2.addEventListener("click", (event) => {
+    minIdx2 = 0;
+    if (event.altKey) {
+      idx2 = idx2 === 0 ? dices.length - 1 : idx2 - 1;
+    } else {
+      idx2 = idx2 === dices.length - 1 ? 0 : idx2 + 1;
+    }
     diceButton2.textContent = dices[idx2];
-    countButton2.textContent = countIdx2;
-    minButton2.textContent = minIdx2;
+    minButton2.textContent = "-";
+  });
 
+
+  diceButton3.addEventListener("click", (event) => {
+    minIdx3 = 0;
+    if (event.altKey) {
+      idx3 = idx3 === 0 ? dices.length - 1 : idx3 - 1;
+    } else {
+      idx3 = idx3 === dices.length - 1 ? 0 : idx3 + 1;
+    }
     diceButton3.textContent = dices[idx3];
-    countButton3.textContent = countIdx3;
-    minButton3.textContent = minIdx3;
+    minButton3.textContent = "-";
+  });
 
-    diceButton.addEventListener("click", (event) => {
-        minIdx = 0;
-      if ( event.altKey ) {
-        idx = idx === 0 ? dices.length-1 : idx - 1;
-      } else {
-        idx = idx === dices.length - 1 ? 0 : idx + 1;
-      }
-        diceButton.textContent = dices[idx];
-        minButton.textContent = "-";
-    });
-
-    diceButton2.addEventListener("click", (event) => {
-        minIdx2 = 0;
-      if ( event.altKey) {
-        idx2 = idx2 === 0 ? dices.length-1 : idx2 - 1;
-      } else {
-        idx2 = idx2 === dices.length - 1 ? 0 : idx2 + 1;
-      }
-        diceButton2.textContent = dices[idx2];
-        minButton2.textContent = "-";
-    });
-
-
-    diceButton3.addEventListener("click", (event) => {
-        minIdx3 = 0;
-      if ( event.altKey) {
-        idx3 = idx3 === 0 ? dices.length-1 : idx3 - 1;
-      } else {
-        idx3 = idx3 === dices.length - 1 ? 0 : idx3 + 1;
-      }
-        diceButton3.textContent = dices[idx3];
-        minButton3.textContent = "-";
-    });
-
-    countButton.addEventListener("click", () => {
-      if ( event.altKey) {
+  countButton.addEventListener("click", () => {
+    if (event.altKey) {
       countIdx = countIdx === 0 ? 50 : countIdx - 1;
       countButton.textContent = countIdx;
-      }else {
+    } else {
       countIdx = countIdx === 50 ? 1 : countIdx + 1;
       countButton.textContent = countIdx;
-      }
-    });
+    }
+  });
 
-    countButton2.addEventListener("click", () => {
-      if ( event.altKey) {
+  countButton2.addEventListener("click", () => {
+    if (event.altKey) {
       countIdx2 = countIdx2 === 0 ? 50 : countIdx2 - 1;
       countButton2.textContent = countIdx2;
-      }else {
+    } else {
       countIdx2 = countIdx === 50 ? 1 : countIdx2 + 1;
       countButton2.textContent = countIdx2;
-      }
-    });
+    }
+  });
 
-    countButton3.addEventListener("click", () => {
-      if ( event.altKey) {
+  countButton3.addEventListener("click", () => {
+    if (event.altKey) {
       countIdx3 = countIdx3 === 0 ? 50 : countIdx3 - 1;
       countButton3.textContent = countIdx3;
-      }else {
+    } else {
       countIdx3 = countIdx3 === 50 ? 1 : countIdx3 + 1;
       countButton3.textContent = countIdx3;
-      }
-    });
+    }
+  });
 
-    minButton.addEventListener("click", () => {
-      const minLength = diceResults[dices[idx]].length;
-      if ( event.altKey) {
+  minButton.addEventListener("click", () => {
+    const minLength = diceResults[dices[idx]].length;
+    if (event.altKey) {
       minIdx = minIdx === 0 ? minLength - 1 : minIdx - 1;
-      }else {
+    } else {
       minIdx = minIdx === minLength - 1 ? 0 : minIdx + 1;
-      }
-      minValue = diceResults[dices[idx]][minIdx];
-      minButton.textContent = minValue;
-    });
+    }
+    minValue = diceResults[dices[idx]][minIdx];
+    minButton.textContent = minValue;
+  });
 
-    minButton2.addEventListener("click", () => {
-      const minLength = diceResults[dices[idx2]].length;
-      if ( event.altKey) {
+  minButton2.addEventListener("click", () => {
+    const minLength = diceResults[dices[idx2]].length;
+    if (event.altKey) {
       minIdx2 = minIdx2 === 0 ? minLength - 1 : minIdx2 - 1;
-      }else {
+    } else {
       minIdx2 = minIdx2 === minLength - 1 ? 0 : minIdx2 + 1;
-      }
-      minValue = diceResults[dices[idx2]][minIdx2];
-      minButton2.textContent = minValue;
-    });
+    }
+    minValue = diceResults[dices[idx2]][minIdx2];
+    minButton2.textContent = minValue;
+  });
 
-    minButton3.addEventListener("click", () => {
-      const minLength = diceResults[dices[idx3]].length;
-      if ( event.altKey) {
+  minButton3.addEventListener("click", () => {
+    const minLength = diceResults[dices[idx3]].length;
+    if (event.altKey) {
       minIdx3 = minIdx3 === 0 ? minLength - 1 : minIdx3 - 1;
-      }else {
+    } else {
       minIdx3 = minIdx3 === minLength - 1 ? 0 : minIdx3 + 1;
-      }
-      minValue = diceResults[dices[idx3]][minIdx3];
-      minButton3.textContent = minValue;
-    });
+    }
+    minValue = diceResults[dices[idx3]][minIdx3];
+    minButton3.textContent = minValue;
+  });
 
-    document.querySelector("#roll").onclick = () => {
-      const roll = {
-        type:"roll",
-        dice: dices[idx],
-        count: countIdx,
-        threshold: minIdx,
-        sortDices: document.querySelector("#sort").checked,
-        showSum: document.querySelector("#sum").checked
-      };
-      parent.postMessage({ pluginMessage: roll }, "*");
+  document.querySelector("#roll").onclick = () => {
+    const roll = {
+      type: "roll",
+      dice: dices[idx],
+      count: countIdx,
+      threshold: minIdx,
+      sortDices: document.querySelector("#sort").checked,
+      showSum: document.querySelector("#sum").checked
     };
+    parent.postMessage({ pluginMessage: roll }, "*");
+  };
 
-    document.querySelector("#roll2").onclick = () => {
-      const roll = {
-        type:"roll",
-        dice: dices[idx2],
-        count: countIdx2,
-        threshold: minIdx2,
-        sortDices: document.querySelector("#sort").checked,
-        showSum: document.querySelector("#sum").checked
-      };
-      parent.postMessage({ pluginMessage: roll }, "*");
+  document.querySelector("#roll2").onclick = () => {
+    const roll = {
+      type: "roll",
+      dice: dices[idx2],
+      count: countIdx2,
+      threshold: minIdx2,
+      sortDices: document.querySelector("#sort").checked,
+      showSum: document.querySelector("#sum").checked
     };
+    parent.postMessage({ pluginMessage: roll }, "*");
+  };
 
-    document.querySelector("#roll3").onclick = () => {
-      const roll = {
-        type:"roll",
-        dice: dices[idx3],
-        count: countIdx3,
-        threshold: minIdx3,
-        sortDices: document.querySelector("#sort").checked,
-        showSum: document.querySelector("#sum").checked
-      };
-      parent.postMessage({ pluginMessage: roll }, "*");
+  document.querySelector("#roll3").onclick = () => {
+    const roll = {
+      type: "roll",
+      dice: dices[idx3],
+      count: countIdx3,
+      threshold: minIdx3,
+      sortDices: document.querySelector("#sort").checked,
+      showSum: document.querySelector("#sum").checked
     };
+    parent.postMessage({ pluginMessage: roll }, "*");
+  };
 
-    document.querySelector("#shuffleButton").onclick = () => {
-      const roll = {
-        type: "shuffle",
-      }
-      parent.postMessage({ pluginMessage: roll }, "*");
-    };
+  document.querySelector("#shuffleButton").onclick = () => {
+    const roll = {
+      type: "shuffle",
+    }
+    parent.postMessage({ pluginMessage: roll }, "*");
+  };
 
-    document.querySelector("#coverButton").onclick = () => {
-      const roll = {
-        type: "setCover",
-      }
-      parent.postMessage({ pluginMessage: roll }, "*");
-    };
+  document.querySelector("#coverButton").onclick = () => {
+    const roll = {
+      type: "setCover",
+    }
+    parent.postMessage({ pluginMessage: roll }, "*");
+  };
 
   onmessage = (event) => {
-    <!--document.querySelector("#output").innerHTML = event.data.pluginMessage-->
+    document.querySelector("#output").innerHTML = event.data.pluginMessage;
   }
 
-  </script>
+</script>
+
 </html>

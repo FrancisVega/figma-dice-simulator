@@ -190,7 +190,7 @@ function createTextDiceNode({
       threshold,
       value
     )
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // Añade un fill color a un caracter de un nodo de texto en una posición
@@ -202,7 +202,7 @@ function paintChar(text, pos, col) {
 const faces = str => {
   try {
     return parseInt(str.split(/d/)[1])
-  } catch (err) {}
+  } catch (err) { }
 }
 
 function getNodeRootName(node, sep = "/") {
@@ -225,6 +225,15 @@ function takeOneComponentRandom(components) {
   return components[rndIndex]
 }
 
+function takeOneComponentRandomNoUsed(components,used) {
+  let rndIndex = Math.floor(Math.random() * components.length);
+  while (used.includes(rndIndex) && used.length<components.length) {
+    rndIndex = Math.floor(Math.random() * components.length)
+  }
+  used.push(rndIndex);
+  return components[rndIndex]
+}
+
 function getOneSelection() {
   try {
     return figma.currentPage.selection[0]
@@ -234,20 +243,32 @@ function getOneSelection() {
 }
 
 function shuffleCard() {
-  console.log("Shuffle")
-  const sel = getOneSelection()
-
-  if (!sel) {
-    figma.notify("Select one card")
+  const sel = figma.currentPage.selection;
+  if (sel.length===0) {
+    figma.notify("Select cards")
     return
   }
-
-  const randomMaster = takeOneComponentRandom(
-    getMasterComponentsByRootName(sel, coverName)
-  )
-
-  sel.masterComponent = randomMaster
+  const covers = getMasterComponentsByRootName(sel[0], coverName)
+  let used = [];
+  sel.forEach((element) => {
+     setTimeout(function(){
+      element.masterComponent=takeOneComponentRandomNoUsed(covers,used)
+      }, 10);
+  });
 }
+
+// function shuffleCard() {
+//   console.log("Shuffle");
+//   const sel = getOneSelection();
+//   if (!sel) {
+//     figma.notify("Select one card")
+//     return
+//   }
+//   const covers = getMasterComponentsByRootName(sel, coverName)
+//   const randomMaster = takeOneComponentRandom(covers)
+//   sel.masterComponent = randomMaster
+// }
+
 
 function getCoverInstance(node, coverName) {
   const newName = getNodeRootName(node) + "/" + coverName
